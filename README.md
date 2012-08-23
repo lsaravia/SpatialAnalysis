@@ -18,7 +18,7 @@ Several programs for 2D spatial analysis including:
 
 7. File conversion routines
 
-8. Ripley's K estimation from: Goreaud F, Pélissier R (1999) On explicit formulas of edge effect correction for Ripley’s K-function. Journal of Vegetation Science 10: 433–438.
+8. Ripley's K estimation. Some routines are sligtly modified code from: Goreaud F, Pélissier R (1999) On explicit formulas of edge effect correction for Ripley’s K-function. Journal of Vegetation Science 10: 433–438. 
 
 Some of the programs don't even have a makefile.
 
