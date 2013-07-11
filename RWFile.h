@@ -20,7 +20,7 @@
 #include <iomanip>
 #include <string.h>
 #include "smattpl.h"
-#ifndef __BORLANDC__
+#ifdef __linux
 #include "tiffio.h"
 #endif
 using namespace std;
@@ -715,7 +715,7 @@ template <class Type> int RWFile::ReadXYVec(const char * finp, simplmat<Type> &d
 	return(1);
 }
 
-#ifndef __BORLANDC__  // ReadTiff
+#ifdef __linux  // ReadTiff
 template <class Type> int RWFile::ReadTiff(const char * fname, simplmat<Type>& data)
 {
 	string iname;
