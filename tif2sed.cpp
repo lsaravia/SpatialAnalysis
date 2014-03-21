@@ -9,7 +9,7 @@ int main(int argc, char * argv[])
 		cerr << "Usage: tif2sed input output grad(0=No) win" << endl;
 		exit(1);
 	}
-	simplmat<float> data;
+	simplmat<double> data;
 	RWFile file;
 	file.ReadTiff(argv[1], data);
 	int dimX = data.getRows();

@@ -1,0 +1,24 @@
+file format : IDRISI Raster A.1
+file title  : p27bio1.rst BI File 
+data type   : real
+file type   : binary
+columns     : 550
+rows        : 400
+ref. system : plane
+ref. units  : m
+unit dist.  : 1.0000000
+min. X      : 1
+max. X      : 550
+min. Y      : 1
+max. Y      : 400
+pos'n error : unknown
+resolution  : unknown
+min. value  : 0
+max. value  : 157
+display min : 0
+display max : 157
+value units : unspecified
+value error : unknown
+flag value  : none
+flag def'n  : none
+legend cats : 0

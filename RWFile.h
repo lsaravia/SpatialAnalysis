@@ -296,7 +296,7 @@ template <class Type> int RWFile::ReadSeed(const char * fname,simplmat<Type>& da
 
 
 
-template <class Type> int RWFile::WriteSeed(const char * fname,simplmat<Type>& data, char * dataType)
+template <class Type> int RWFile::WriteSeed(const char * fname,simplmat<Type>& data, const char * dataType)
 {
 	int i,j,dx,dy;
 	bool privez=false;
@@ -350,7 +350,7 @@ template <class Type> int RWFile::WriteSeed(const char * fname,simplmat<Type>& d
 }
 
 
-template <class Type> int RWFile::WriteSeed(const char * fname,simplmat<Type>& data, char * dataType,
+template <class Type> int RWFile::WriteSeed(const char * fname,simplmat<Type>& data, const char * dataType,
 			int xTL, int yTL, int xLen, int yLen)
 
 {
