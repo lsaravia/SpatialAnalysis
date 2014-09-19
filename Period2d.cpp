@@ -8,7 +8,6 @@
 //   FT04 - OUTPUT MATRIX SIZE AND VARIANCE (I.E. SS/M*N)
 
 #include "Spectral.h"
-#include "fortify.h"
 #include <math.h>
 
 using namespace std;
@@ -16,7 +15,7 @@ using namespace std;
 double SpectralAnalysis::Period2D(simplmat<double>& x,simplmat<double>& xout)
 {
 	simplmat <double> a,b,p;
-	double total,con1,con2,pie,ang,inv,ss,isize;
+	double total,con1,con2,ang,inv,ss,isize;
 
 //	readSeed(filein,x);
 	

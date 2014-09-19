@@ -19,10 +19,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <limits.h>
-//#include "r250.h"
-#include "randlib.h"
+#include "ran.h"
 #include "RipleyTriangle.h"
-//#include "fortify.h"
 
 
 /*****************************************************************************/
@@ -948,7 +946,7 @@ void ripley_tr_rect(int point_nb, float x[],float y[],float xmi,float xma,
 
 void initalea(void)
 {
-	int ii,cro;
+/*	int ii,cro;
     double chi;
 
     ii=1;
@@ -967,11 +965,10 @@ void initalea(void)
     }
     cro=chi;
     srand(cro);
-//    r250_init(cro);
-	setall(rand(),rand());
-    
+*/    
 }
 
+static 	Ranf1 ran;
 
 /*return a long int between 0 and z*/
 long aleaS(long z)	/* v4 */
@@ -995,8 +992,7 @@ long aleaS(long z)	/* v4 */
 */
 //	return r250n(z+1);
 //	double Rand() { return ranf(); };
-   	return ignuin(0,z);
-    
+	return (ran.int64() % (z+1)); // between 0 and num inclusive 
 }
 
 void s_alea_tr_rect(int point_nb,float x[], float y[], float xmi, float xma,

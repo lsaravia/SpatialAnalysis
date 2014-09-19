@@ -4,7 +4,7 @@
 #include "smattpl.h"
 //#include "r250.h"
 #include <time.h>
-#include "randlib.h"
+#include "ran.h"
 
 #ifndef M_PI
 #define M_PI		3.14159265358979323846
@@ -14,17 +14,17 @@ class SpectralAnalysis
 {
 //	int Rows;  // (dimX) Esta alrevez
 //	int Cols;  // (dimY)
+	Ranf1 ran;
 
 	public:
 
     SpectralAnalysis(int rSeed=0) {
-    					if(rSeed==0)
-                        	rSeed=time(0);
-                       	setall(rSeed,rSeed+1);
+    					if(rSeed!=0)
+                       		ran.init(rSeed);
                         };
 
 // OJO AL CAMBIO DE GENERADOR DE NROS AL AZAR!!!!!!!!!!
-    unsigned Rand(unsigned r) { return ignuin(0,r-1); };
+    unsigned Rand(unsigned r) { return (ran.int64() % (r));  };
 
 	void Transpose( simplmat<double> & data );
 	

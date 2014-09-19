@@ -7,7 +7,7 @@
 //
 //  Rearranged periodogram I(j,k) with j=0,...,m/2 and k=-n/2,...,n/2-1;
 #include "Spectral.h"
-#include "fortify.h"
+//#include "fortify.h"
 
 using namespace std;
 

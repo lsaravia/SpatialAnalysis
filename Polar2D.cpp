@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <math.h>
-#include "fortify.h"
+//#include "fortify.h"
 using namespace std;
 
 void SpectralAnalysis::Polar2D(

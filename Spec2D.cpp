@@ -8,7 +8,7 @@
 //   ft05 - y fourier coefficients to enable inversion 
 //   ft06 - output matrix size and variance (i.e. ss/n1*n2) 
 #include "Spectral.h"
-#include "fortify.h"
+//#include "fortify.h"
 #include <math.h>
 
 using namespace std;

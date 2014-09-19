@@ -2,8 +2,8 @@
 #define __SMATTPL_HPP
 
 #include <iostream>
-#include <stdlib.h>
-//#include <process.h>
+#include <cstring>
+#include <cstdlib>
 
 #ifdef __GNUC__
 //#include "fortify.h"
