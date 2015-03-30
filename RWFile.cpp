@@ -22,7 +22,7 @@
 
 using namespace std;
 
-int RWFile::WriteIdrisi( const char * fname, simplmat<float>& data)
+bool RWFile::WriteIdrisi( const char * fname, simplmat<float>& data)
 {
 	//int i,j;
 
@@ -121,7 +121,7 @@ int RWFile::WriteIdrisi( const char * fname, simplmat<float>& data)
 
 }
 
-int RWFile::WriteIdrisi( const char * fname, simplmat<int>& data)
+bool RWFile::WriteIdrisi( const char * fname, simplmat<int>& data)
 {
 	//int i,j;
 

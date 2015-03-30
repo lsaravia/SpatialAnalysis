@@ -9,7 +9,7 @@
 //#include "fortify.h"
 #endif
 
-#define INTEGER int
+#define INTEGER unsigned 
 using namespace std;
 
 template <class Type> class simplmat

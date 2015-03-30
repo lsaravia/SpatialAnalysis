@@ -22,10 +22,18 @@ Several programs for 2D spatial analysis in ecology, including:
 
 Some of the programs don't even have a makefile.
 
+## C++ class implementing Hoshen-Kopelman algorithm for cluster labeling
+
+    hk.h
+    hk.cpp
+    main_hk.cpp
+    hk.mak
+    test_hk.sed
 
 
-License
-=======
+# General License
+
+If is not specified in the source code the following licences applies:
 
     The MIT License (MIT)
 

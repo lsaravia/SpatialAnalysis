@@ -34,19 +34,19 @@ class RWFile
 	RWFile() {DimX=0;DimY=0;};
 	~RWFile() {};
 
-	template <class Type> int WriteMapXY(const char * fname, simplmat<Type>& data,int option=0, double factor=1, Type filter=0);
-	template <class Type> int Conv2XY(simplmat<Type>& data,simplmat<Type>& out);
-	template <class Type> int ReadSeed(const char * fname,simplmat<Type>& data, const char * dataType="");
-	template <class Type> int ReadSeed(const char * fname,simplmat<Type>& data, const char * dataType,int xTL, int yTL, int xLen, int yLen);
-	template <class Type> int WriteSeed(const char * fname,simplmat<Type>& data, char * dataType="");
-	template <class Type> int WriteSeed(const char * fname,simplmat<Type>& data, char * dataType, int xTL, int yTL, int xLen, int yLen);
-	template <class Type> int ReadIdrisi(const char * fname, simplmat<Type>& data);
-	template <class Type> int ReadMapXY(const char * finp, float xsize,float xstep,float ysize,float ystep, simplmat<Type> &data,int option=0);
-	template <class Type> int ReadXYVec(const char * finp, simplmat<Type> &data,int option=0);
-	template <class Type> int ReadTiff(const char * fname, simplmat<Type>& data);
+	template <class Type> bool WriteMapXY(const char * fname, simplmat<Type>& data,int option=0, double factor=1, Type filter=0);
+	template <class Type> bool Conv2XY(simplmat<Type>& data,simplmat<Type>& out);
+	template <class Type> bool ReadSeed(const char * fname,simplmat<Type>& data, const char * dataType="");
+	template <class Type> bool ReadSeed(const char * fname,simplmat<Type>& data, const char * dataType,int xTL, int yTL, int xLen, int yLen);
+	template <class Type> bool WriteSeed(const char * fname,simplmat<Type>& data, const char * dataType="");
+	template <class Type> bool WriteSeed(const char * fname,simplmat<Type>& data, const char * dataType, int xTL, int yTL, int xLen, int yLen);
+	template <class Type> bool ReadIdrisi(const char * fname, simplmat<Type>& data);
+	template <class Type> bool ReadMapXY(const char * finp, float xsize,float xstep,float ysize,float ystep, simplmat<Type> &data,int option=0);
+	template <class Type> bool ReadXYVec(const char * finp, simplmat<Type> &data,int option=0);
+	template <class Type> bool ReadTiff(const char * fname, simplmat<Type>& data);
 
-	int WriteIdrisi(const char * fname, simplmat<float>& data);
-	int WriteIdrisi(const char * fname, simplmat<int>& data);
+	bool WriteIdrisi(const char * fname, simplmat<float>& data);
+	bool WriteIdrisi(const char * fname, simplmat<int>& data);
 
 };
 
@@ -56,7 +56,7 @@ class RWFile
 // y el numero total de puntos al pricipio del archivo.
 //
 //
-template <class Type> int RWFile::WriteMapXY(const char * fname, simplmat<Type>& data, int option, double factor, Type filter)
+template <class Type> bool RWFile::WriteMapXY(const char * fname, simplmat<Type>& data, int option, double factor, Type filter)
 {
 	int i,j;
 	Type sp;
@@ -129,12 +129,13 @@ template <class Type> int RWFile::WriteMapXY(const char * fname, simplmat<Type>&
     		}
     	break;
 	}
+return true;
 }
 
 //
 // Convierte una matriz tipo sed a un vector de coordenadas
 //
-template <class Type> int RWFile::Conv2XY(simplmat<Type>& data,simplmat<Type>& out)
+template <class Type> bool RWFile::Conv2XY(simplmat<Type>& data,simplmat<Type>& out)
 {
 	int i,j;
 	Type sp;
@@ -163,17 +164,17 @@ template <class Type> int RWFile::Conv2XY(simplmat<Type>& data,simplmat<Type>& o
 				t++;
 			}
 		}
+	return true;
 }
 
 
 
 
-template <class Type> int RWFile::ReadSeed(const char * fname,simplmat<Type>& data, const char * dataType)
+template <class Type> bool RWFile::ReadSeed(const char * fname,simplmat<Type>& data, const char * dataType)
 {
 	ifstream in;
 	string buff,dType;
-	int dx,dy;
-	int tipo;
+	unsigned int dx,dy;
 	Type spe;
 
 	in.open(fname);
@@ -193,19 +194,22 @@ template <class Type> int RWFile::ReadSeed(const char * fname,simplmat<Type>& da
 	DimY=dy;
 
 	dType = dataType;
+	// if dataType is empty assing BI type
 	if( dType.empty() )
 		dType = "BI";
-		
+	
 	while( !in.eof() )
 	{
 		getline(in,buff);
 		if ( buff.find(dType)==string::npos )
-        {
-        	if(in.eof())		// No encontro el tipo especificado
-            	return false;
+                {
+                    if(in.eof()){		// No encontro el tipo especificado
+                        cerr << "Type " << dType << " not found.\n";
+                        return false;
+                    }
                 
         	continue;
-        }
+                }
         
             
 		for(dy=0;dy<DimY; dy++)
@@ -226,7 +230,7 @@ template <class Type> int RWFile::ReadSeed(const char * fname,simplmat<Type>& da
 	return true;
 }
 
-template <class Type> int RWFile::ReadSeed(const char * fname,simplmat<Type>& data, const char * dataType,
+template <class Type> bool RWFile::ReadSeed(const char * fname,simplmat<Type>& data, const char * dataType,
 			int xTL, int yTL, int xLen, int yLen)
 {
 	ifstream in;
@@ -296,9 +300,9 @@ template <class Type> int RWFile::ReadSeed(const char * fname,simplmat<Type>& da
 
 
 
-template <class Type> int RWFile::WriteSeed(const char * fname,simplmat<Type>& data, const char * dataType)
+template <class Type> bool RWFile::WriteSeed(const char * fname,simplmat<Type>& data, const char * dataType)
 {
-	int i,j,dx,dy;
+	unsigned int i,j,dx,dy;
 	bool privez=false;
 
 	// Esta alreves simplmat= (row,col) y yo use siempre (col,row) ==> x=rows y=cols
@@ -350,7 +354,7 @@ template <class Type> int RWFile::WriteSeed(const char * fname,simplmat<Type>& d
 }
 
 
-template <class Type> int RWFile::WriteSeed(const char * fname,simplmat<Type>& data, const char * dataType,
+template <class Type> bool RWFile::WriteSeed(const char * fname,simplmat<Type>& data, const char * dataType,
 			int xTL, int yTL, int xLen, int yLen)
 
 {
@@ -414,7 +418,7 @@ template <class Type> int RWFile::WriteSeed(const char * fname,simplmat<Type>& d
 
 
 
-template <class Type> int RWFile::ReadIdrisi(const char * fname, simplmat<Type>& data)
+template <class Type> bool RWFile::ReadIdrisi(const char * fname, simplmat<Type>& data)
 {
 	string dname,iname;
 	iname = fname;
@@ -555,7 +559,7 @@ template <class Type> int RWFile::ReadIdrisi(const char * fname, simplmat<Type>&
 //      
 //      OJO asume val val2 >= 0!!
 
-template <class Type> int RWFile::ReadMapXY(const char * finp, float xsize,float xstep,float ysize,float ystep, simplmat<Type> &data, int option)
+template <class Type> bool RWFile::ReadMapXY(const char * finp, float xsize,float xstep,float ysize,float ystep, simplmat<Type> &data, int option)
 {
 	int x,y,xx,yy,numTies=0;
 
@@ -647,7 +651,7 @@ template <class Type> int RWFile::ReadMapXY(const char * finp, float xsize,float
 	return(1);
 }
 
-template <class Type> int RWFile::ReadXYVec(const char * finp, simplmat<Type> &data,int option)
+template <class Type> bool RWFile::ReadXYVec(const char * finp, simplmat<Type> &data,int option)
 {
 	int x,y,xx,yy;
 
@@ -716,7 +720,7 @@ template <class Type> int RWFile::ReadXYVec(const char * finp, simplmat<Type> &d
 }
 
 #ifdef __linux  // ReadTiff
-template <class Type> int RWFile::ReadTiff(const char * fname, simplmat<Type>& data)
+template <class Type> bool RWFile::ReadTiff(const char * fname, simplmat<Type>& data)
 {
 	string iname;
 	iname = fname;
@@ -795,7 +799,7 @@ template <class Type> int RWFile::ReadTiff(const char * fname, simplmat<Type>& d
 }
 #else  // ReadTiff
 
-template <class Type> int RWFile::ReadTiff(const char * fname, simplmat<Type>& data)
+template <class Type> bool RWFile::ReadTiff(const char * fname, simplmat<Type>& data)
 {
 	return 0;
 }
