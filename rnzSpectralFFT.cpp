@@ -2,7 +2,7 @@
 #include "Randomizations.h"
 #include <iomanip>
 #include <math.h>
-#include "fortify.h"
+//#include "fortify.h"
 #include "cdflib.h"
 
 using namespace std;

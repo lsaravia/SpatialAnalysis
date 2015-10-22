@@ -2,7 +2,7 @@
 #include "RWFile.h"
 #include "Randomizations.h"
 #include <iomanip>
-#include "fortify.h"
+//#include "fortify.h"
 #include "ctype.h"
 
 int main(int argc, char * argv[])

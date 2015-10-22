@@ -2,10 +2,11 @@
 #define RANDOMIZATIONS_H
 
 #include "smattpl.h"
-//#include "r250.h"
 #include <time.h>
 #include <algorithm>
-#include "randlib.h"
+#include "ran.h"
+//#include "randlib.h"
+//#include "r250.h"
 
 struct randomizePosXY
 {
@@ -13,21 +14,23 @@ struct randomizePosXY
 	int y;
 };
 
-class R250
+class R250  : Ranf1
 {
 	public:
-	R250(){
-		int seed = static_cast<long>(time(0));
-		setall(seed,seed+1);
+	R250() : Ranf1(){
+//		int seed = static_cast<long>(time(0));
+//		setall(seed,seed+1);
 		};
-	int operator()(int num) const
+	int operator()(const int &num) 
         {
-            return ignuin(0,num-1);
+        	return (int64() % (num));
+//          return ignuin(0,num-1);
         }
 
-	double operator()() const
+	double operator()() 
         {
-            return ranf();
+			return doub(); 
+//	        return ranf();
         }
 
 };

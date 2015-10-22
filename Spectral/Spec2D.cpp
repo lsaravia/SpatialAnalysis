@@ -35,7 +35,7 @@ double SpectralAnalysis::Spec2D(simplmat<double>& r,simplmat<double>& xout)
     double * work1 = new double[m2];
     double * work2 = new double[m2];
 
-	if( x==NULL )
+	if( x==NULL || y==NULL || work1==NULL || work2==NULL)
 	{
 		cerr << "Error memory allocation, variable x" << endl;
 		return -1;

@@ -4,7 +4,8 @@ Ecological Spatial analysis programns in C++
 
 Several programs for 2D spatial analysis in ecology, including:
 
-1. Spectral Bidimensional analysis that are recodings of fortran routines coded by E. Renshaw. 
+1. Spectral Bidimensional analysis, some code is ported from fortran routines coded by E. Renshaw. 
+    Mugglestone MA, Renshaw E. Detection of geological lineations on aerial photographs using two-dimensional spectral analysis. Comput Geosci. 1998;24: 771–784. doi:10.1016/S0098-3004(98)00065-X
 
 2. PairCorrelation analysis
 

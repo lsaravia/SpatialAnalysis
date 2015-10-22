@@ -18,7 +18,11 @@
 #define RWFILE_H
 #include <fstream>
 #include <iomanip>
-#include <string.h>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <algorithm>
+
 #include "smattpl.h"
 #ifdef __linux
 #include "tiffio.h"
@@ -43,10 +47,8 @@ class RWFile
 	template <class Type> bool ReadIdrisi(const char * fname, simplmat<Type>& data);
 	template <class Type> bool ReadMapXY(const char * finp, float xsize,float xstep,float ysize,float ystep, simplmat<Type> &data,int option=0);
 	template <class Type> bool ReadXYVec(const char * finp, simplmat<Type> &data,int option=0);
+	template <class Type> bool ClusterizeXY(const char * finp, int xsize,int ysize,float lc, simplmat<Type> &data, int option);
 	template <class Type> bool ReadTiff(const char * fname, simplmat<Type>& data);
-
-	bool WriteIdrisi(const char * fname, simplmat<float>& data);
-	bool WriteIdrisi(const char * fname, simplmat<int>& data);
 
 };
 
@@ -651,6 +653,116 @@ template <class Type> bool RWFile::ReadMapXY(const char * finp, float xsize,floa
 	return(1);
 }
 
+// Build a lattice of dimension xsize,ysize from a vector {x,y,sp} or {x,y,sp,ba}, 
+//
+// where 	lc is the local scale to build the lattice in the units of x,y
+//			sp is a species number
+//       	ba is the basal area or importance of this species
+// parameters
+//			readOption = 0  reads x,y
+// 			     	     1 	reads x,y,sp
+//			        	 2 	reads x,y,sp,ba
+//			outOption = 0  choose the most abundant species inside the site
+//						anyNumber choose the species with that number 
+//
+// Example
+//         xsize=1000,ysize=500,lc=1: the vector X,Y in file is measured from x=0 to 1000 and y=0 to 500
+//		   xsize=1000,ysize=500,lc=10: the vector X,Y in file is measured from x=0 to 10000 and y=0 to 5000 and each site is 10x10
+//         xsize=100,ysize=50,lc=10: the vector X,Y in file is measured from x=0 to 1000 and y=0 to 500 and each site is 10x10
+//
+template <class Type> bool RWFile::ClusterizeXY(const char * finp, int xsize,int ysize,float lc, simplmat<Type> &data, int readOption, int outOption)
+{
+   	struct lines{ double x; double y; int sp; double ba;};
+   	double kx=0.0,ky=0.0,ba=0.0;
+   	int sp=0;
+   	vector<lines> li; //pag 48
+
+	ifstream in(finp);
+	if(!in)
+	{
+		cerr << "Can not open " << finp << endl;
+		return(0);
+	}
+	while(!in.eof())
+	{
+		switch(readOption)
+		{
+		case 2:
+			in >> kx >> ky >> sp >> ba;
+			break;
+		case 1:
+			in >> kx >> ky >> sp;
+			break;
+		case 0:
+			in >> kx >> ky;
+			break;
+		default:
+			cerr << "Error invalid option: " << option << endl;
+		}
+		
+		if( kx<0 || ky<0 || sp<0 || ba<0)
+		{
+			cerr << "Error negative values " << kx << "\t" << ky << endl;
+			exit(0);
+		} 
+		if( in.eof() ) break;
+
+		li.push_back({kx,ky,sp,ba});
+	}
+
+
+	data.resize(xsize,ysize,0.0);
+    int sumSp=0;
+    typedef unordered_map<int,unsigned long> CounterMap;
+    typedef unordered_map<int,unsigned long>::value_type  CounterMap_type;
+
+	for(int i=1; i<=xsize; i++)
+        for(int j=1; j<=ysize; j++) {
+
+		    // this calculates the number of individuals for each species
+		    //
+		    CounterMap counts;
+		    for (const auto& l : li)
+		  		if (l.x<i && l.y<j && l.x>=i-1 && l.y>=j-1) {                        
+		                sumSp++;
+		                CounterMap::iterator ii(counts.find(l.sp));
+		                if (ii != counts.end()){
+		                    ii->second++;
+		                } else {
+		                    counts[l.sp] = 1;
+		                    // numSp++; total number of species = counts.size()
+		        		}
+		        }
+
+		//  Put the most abundant species into the lattice (lambda expression)
+		//
+            if( counts.size()>0)
+            {
+	   			switch(outOption)
+				{
+				case 0:
+		            auto maxSp = max_element(counts.begin(), counts.end(), 
+		                [](const CounterMap_type& p1, const CounterMap_type& p2) {return p1.second < p2.second; });
+
+		            data(i-1,j-1) = maxSp->first;
+					break;
+
+				default:
+    				auto it = counts.find(outOption);
+					if( it!=counts::end() )
+			            data(i-1,j-1) = 1;
+			        break;
+            }
+        }
+    
+
+	return(true);
+}
+
+
+// Reads a text file with structure {x,y} or {x,y,value}
+// only returns a matrix with {x,y}
+//
 template <class Type> bool RWFile::ReadXYVec(const char * finp, simplmat<Type> &data,int option)
 {
 	int x,y,xx,yy;

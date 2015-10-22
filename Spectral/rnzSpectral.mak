@@ -19,21 +19,29 @@ I_DIRS=-I../../fortify -I.. -I../../randlib/src -I../CaNew
 #P_DEFS=-DGRAPHICS -DPERIODIC_BOUNDARY
 
 #CFLAGS = -O3 -Wall -Ic:/cpp/fortify -Ic:/cpp/canew -DGRAPHICS -DFORTIFY -fexternal-templates 
-CXXFLAGS = -g -Wall -std=c++11 $(I_DIRS) $(X11INCS)  $(SDLDEFS) $(P_DEFS)
+CXXFLAGS = -g -Wall $(I_DIRS) $(X11INCS)  $(SDLDEFS) $(P_DEFS)
 
-O = XY2sed.o 
+O = rnzSpectral.o RWFile.o randomizations.o 
 
 L = -lm -ltiff
 
-XY2sed: $(O)
-	g++ -o XY2sed $(O) $(L)
+rnzSpectral: $(O)
+	g++ -o rnzSpectral $(O) $(L)
 
 clean:
-	rm XY2sed $(O)
+	rm rnzSpectral $(O)
 
 
 # DEPENDENCIES
 
-XY2sed.o: XY2sed.cpp RWFile.h
+Spec2D.o: Spec2D.cpp
+
+SpectralAux.o: SpectralAux.cpp
+
+randomizations.o: randomizations.cpp Randomizations.h
+
+RWFile.o: RWFile.cpp RWFile.h
+
+rnzSpectral.o: rnzSpectral.cpp 
 
 

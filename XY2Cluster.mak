@@ -18,22 +18,22 @@ SDLDEFS = -D__XWIN__
 I_DIRS=-I../../fortify -I.. -I../../randlib/src -I../CaNew
 #P_DEFS=-DGRAPHICS -DPERIODIC_BOUNDARY
 
-#CFLAGS = -O3 -Wall -Ic:/cpp/fortify -Ic:/cpp/canew -DGRAPHICS -DFORTIFY -fexternal-templates 
-CXXFLAGS = -g -Wall -std=c++11 $(I_DIRS) $(X11INCS)  $(SDLDEFS) $(P_DEFS)
+CXXFLAGS = -O3 -Wall -std=c++11 $(I_DIRS) $(X11INCS)  $(SDLDEFS) $(P_DEFS)
+#CXXFLAGS = -g -Wall -std=c++11 $(I_DIRS) $(X11INCS)  $(SDLDEFS) $(P_DEFS)
 
-O = XY2sed.o 
+O = XY2Cluster.o 
 
 L = -lm -ltiff
 
-XY2sed: $(O)
-	g++ -o XY2sed $(O) $(L)
+XY2Cluster: $(O)
+	g++ -o XY2Cluster $(O) $(L)
 
 clean:
-	rm XY2sed $(O)
+	rm XY2Cluster $(O)
 
 
 # DEPENDENCIES
 
-XY2sed.o: XY2sed.cpp RWFile.h
+XY2Cluster.o: XY2Cluster.cpp RWFile.h
 
 
