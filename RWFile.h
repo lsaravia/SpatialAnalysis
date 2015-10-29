@@ -47,7 +47,7 @@ class RWFile
 	template <class Type> bool ReadIdrisi(const char * fname, simplmat<Type>& data);
 	template <class Type> bool ReadMapXY(const char * finp, float xsize,float xstep,float ysize,float ystep, simplmat<Type> &data,int option=0);
 	template <class Type> bool ReadXYVec(const char * finp, simplmat<Type> &data,int option=0);
-	template <class Type> bool ClusterizeXY(const char * finp, int xsize,int ysize,float lc, simplmat<Type> &data, int option);
+    template <class Type> bool ClusterizeXY(const char * finp, int xsize,int ysize,float lc, simplmat<Type> &data, int readOption, int outOption);
 	template <class Type> bool ReadTiff(const char * fname, simplmat<Type>& data);
 
 };
@@ -697,7 +697,7 @@ template <class Type> bool RWFile::ClusterizeXY(const char * finp, int xsize,int
 			in >> kx >> ky;
 			break;
 		default:
-			cerr << "Error invalid option: " << option << endl;
+			cerr << "Error invalid option: " << readOption << endl;
 		}
 		
 		if( kx<0 || ky<0 || sp<0 || ba<0)
@@ -712,7 +712,8 @@ template <class Type> bool RWFile::ClusterizeXY(const char * finp, int xsize,int
 
 
 	data.resize(xsize,ysize,0.0);
-    int sumSp=0;
+    unsigned long sumSp=0,lostSp=0,sumPatch=0;
+    
     typedef unordered_map<int,unsigned long> CounterMap;
     typedef unordered_map<int,unsigned long>::value_type  CounterMap_type;
 
@@ -741,19 +742,28 @@ template <class Type> bool RWFile::ClusterizeXY(const char * finp, int xsize,int
 	   			switch(outOption)
 				{
 				case 0:
+                    {
 		            auto maxSp = max_element(counts.begin(), counts.end(), 
 		                [](const CounterMap_type& p1, const CounterMap_type& p2) {return p1.second < p2.second; });
 
 		            data(i-1,j-1) = maxSp->first;
+                    lostSp += counts.size()-1;
+                    sumPatch++;
+                    //cout << i << "\t" << j << "\tSp: " << maxSp->first << " Lo:" << lostSp << " Pa:" << sumPatch << endl;
+                    }
 					break;
 
 				default:
     				auto it = counts.find(outOption);
-					if( it!=counts::end() )
-			            data(i-1,j-1) = 1;
-			        break;
+					if( it!=counts.end() )
+			            data(i-1,j-1) = outOption;
+                }
             }
         }
+    
+	cerr << "Number of species patches lost: " << lostSp << endl;
+	cerr << "Total number of individuals: " << sumSp << endl;
+	cerr << "Total number of patches: " << sumPatch << endl;
     
 
 	return(true);
